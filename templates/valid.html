@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Valid</title>
+  <style>
+        body {
+            display: grid;
+            place-items: center;
+            height: 100vh;
+            background-color: #303030;
+        }
+        main {
+            display: grid;
+            place-items: center;
+            color: white;
+            gap: 1rem;
+            text-align: center;
+        }
+        button {
+            border: none;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            background-color: #87ed68;
+        }
+        button:hover {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<main>
+  Link generated!<br>
+  <a href="{{domain}}/s/{{link}}">{{domain}}/s/{{link}}</a>
+  <form action="/">
+    <button>Go back</button>
+  </form>
+</main>
+</body>
+</html>

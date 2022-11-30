@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Link</title>
+    <style>
+        body {
+            display: grid;
+            place-items: center;
+            height: 100vh;
+            background-color: #303030;
+        }
+        main {
+            display: grid;
+            place-items: center;
+            color: white;
+        }
+        form {
+            display: grid;
+            place-items: center;
+            gap: 1rem;
+        }
+        input {
+            border: none;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            width: 20rem;
+        }
+        input:focus {
+            outline: none;
+            text-align: center;
+        }
+        button {
+            border: none;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            background-color: #87ed68;
+        }
+        button:hover {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Add link</h1>
+        <form action="/add-link" method="post">
+            <input name="link"><br><br>
+            <button type="submit">Submit</button>
+        </form>
+    </main>
+</body>
+</html>
