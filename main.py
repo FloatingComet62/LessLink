@@ -5,6 +5,7 @@ from flask import Flask, request, render_template, redirect, session
 from validators import url
 from pymongo import MongoClient
 from dotenv import load_dotenv
+from datetime import datetime
 
 load_dotenv()
 
@@ -21,7 +22,6 @@ def generateLink():
     for _ in range(11):
         link += chars[random(0, len(chars) - 1)]
     return link
-
 
 @app.get("/")
 def main():
@@ -46,18 +46,19 @@ def login():
 @app.route("/add-link", methods=['POST'])
 def callback():
     if request.method == "POST":
-        outlink = request.form.get('link')
-        valid = url(outlink)
-        if not valid:
-            return render_template("invalid.html")
-
-        inlink = generateLink()
-        collection.insert_one({"inlink": inlink, "outlink": outlink})
-
-        base = request.base_url.split("/")
-        base.pop()
-        base = "/".join(base)
-        return render_template("valid.html", link=inlink, domain=base)
+        outlink = request.form.get("link")
+        if request.form.get("custom"):
+            inlink = request.form.get("code")
+            inlink = inlink.replace(" ", "_")
+        else:
+            inlink = generateLink()
+        if collection.find_one({"_id": inlink}):
+            return render_template("index.html", user=session['user'], alert={"text": "Code already exists", "type": "danger"})
+        if url(outlink):
+            collection.insert_one({"_id": inlink, "link": outlink, "date": datetime.now().strftime("%d/%m/%Y %H:%M:%S")})
+            return render_template("index.html", user=session['user'], alert={"text": "Link added!", "type": "success"})
+        else:
+            return render_template("index.html", user=session['user'], alert={"text": "Invalid URL", "type": "danger"})
     return render_template("index.html")
 
 
