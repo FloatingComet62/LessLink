@@ -1,7 +1,7 @@
 from os import getenv
 from string import ascii_letters, digits
 from random import randint as random
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, session
 from validators import url
 from pymongo import MongoClient
 from dotenv import load_dotenv
@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
+KEY = getenv(key="MASTER_KEY")
+app.secret_key = KEY
 client = MongoClient(getenv("MONGO"))
 collection = client["redirects"]["redirects"]
 
@@ -23,8 +25,23 @@ def generateLink():
 
 @app.get("/")
 def main():
-    return render_template("index.html")
+    if 'user' in session:
+        return render_template("index.html", user=session['user'])
+    return """
+    <center style="margin-top: 1rem;">
+        <form action="/login" method="post">
+            <h1> Login </h1>
+            <input type="password" name="password" placeholder="Password">
+            <input type="submit" value="Login">
+        </form>
+    </center>
+    """
 
+@app.post("/login")
+def login():
+    if request.form.get("password") == KEY:
+        session['user'] = True
+    return redirect("/")
 
 @app.route("/add-link", methods=['POST'])
 def callback():
@@ -51,4 +68,4 @@ def outlink(link):
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)
