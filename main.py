@@ -27,8 +27,8 @@ def generateLink():
 def main():
     if 'user' in session:
         if 'alert' in request.args:
-            return render_template("index.html", alert={"type": request.args['alert'], "text": request.args['message']})
-        return render_template("index.html", user=session['user'])
+            return render_template("index.html", alert={"type": request.args['alert'], "text": request.args['message']}, links= [i for i in collection.find({})])
+        return render_template("index.html", user=session['user'], links= [i for i in collection.find({})])
     return """
     <center style="margin-top: 1rem;">
         <form action="/login" method="post">
@@ -57,7 +57,7 @@ def callback():
         if collection.find_one({"_id": inlink}):
             return redirect(f"/?alert=danger&message=Link%20already%20exists")
         if url(outlink):
-            collection.insert_one({"_id": inlink, "link": outlink, "date": datetime.now().strftime("%d/%m/%Y %H:%M:%S")})
+            collection.insert_one({"_id": inlink, "link": outlink, "date": datetime.now().strftime("%d/%m/%Y %H:%M:%S"), "clicks": 0})
             return redirect(f"/?alert=success&message=Link%20created%20successfully")
         else:
             return redirect(f"/?alert=danger&message=Invalid%20URL")
@@ -68,7 +68,8 @@ def callback():
 def outlink(link):
     res = collection.find_one({"_id": link})
     if res:
-        return redirect(res["outlink"], code=302)
+        collection.update_one({"_id": link}, {"$inc": {"clicks": 1}})
+        return redirect(res["link"], code=302)
     return redirect("Doesn't exist lol")
 
 
