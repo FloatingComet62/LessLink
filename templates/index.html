@@ -39,6 +39,9 @@
             border: 1px solid #fff;
             padding: 0.5rem;
         }
+        button > a{
+            color: #000;
+        }
     </style>
 </head>
 <body>
@@ -68,6 +71,7 @@
                     <th>Code</th>
                     <th>Clicks</th>
                     <th>Created on</th>
+                    <th>Actions</th>
                 </tr>
                 {% for link in links %}
                     <tr>
@@ -75,6 +79,10 @@
                         <td><a href="/r/{{link._id}}" target="_blank">{{link._id}}</a></td>
                         <td>{{link.clicks}}</td>
                         <td>{{link.date}}</td>
+                        <td>
+                            <button><a href="/action/delete/{{link._id}}">Delete</a></button>
+                            <button onclick='editLink("{{link._id}}")'>Edit</button>
+                        </td>
                     </tr>
                 {% endfor %}
             </table>
@@ -93,6 +101,12 @@
             });
         }
         document.onload = dothing();
+        function editLink(id){
+            let new_link = prompt('Enter new redirect link');
+            if (new_link) {
+                window.location.href = `/action/edit/${id}?link=${new_link}`;
+            }
+        }
     </script>
 </body>
 </html>

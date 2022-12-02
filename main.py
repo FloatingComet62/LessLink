@@ -63,6 +63,20 @@ def callback():
             return redirect(f"/?alert=danger&message=Invalid%20URL")
     return render_template("index.html")
 
+@app.route("/action/<action>/<link>")
+def action(action, link):
+    if 'user' in session:
+        if action == "delete":
+            collection.delete_one({"_id": link})
+            return redirect(f"/?alert=success&message=Link%20deleted%20successfully")
+        elif action == "edit":
+            newlink = request.args.get("link")
+            if url(newlink):
+                collection.update_one({"_id": link}, {"$set": {"link": newlink}})
+                return redirect(f"/?alert=success&message=Link%20edited%20successfully")
+            else:
+                return redirect(f"/?alert=danger&message=Invalid%20URL")
+    return redirect("/")
 
 @app.route("/r/<link>")
 def outlink(link):
