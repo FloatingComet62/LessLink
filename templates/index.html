@@ -103,23 +103,37 @@
     .alert {
       background-color: #000;
       width: 100%;
-      text-align: center;
       padding-top: 1rem;
       padding-bottom: 1rem;
       border-radius: 1rem;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     .danger {
       background-color: #eb4034;
     }
     .success {
-      background-color: #2fcc41;
+      background-color: #3dc451;
+    }
+    #cross {
+      width: 25px;
+      height: 25px;
+      margin-right: 1rem;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   {% if alert %}
   <div class="alert {{alert.type}}">
-    {{alert.text}}
+    <div></div>
+    <div>{{alert.text}}</div>
+    <svg id="cross" onclick="hideAlert()" width="621" height="621" viewBox="0 0 621 621" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect y="553.063" width="782.149" height="96" rx="48" transform="rotate(-45 0 553.063)" fill="#fff"/>
+      <rect x="67.8823" width="782.149" height="96" rx="48" transform="rotate(45 67.8823 0)" fill="#fff"/>
+    </svg>
   </div>
   {% endif %}
   <h1>Dashboard</h1>
@@ -164,9 +178,12 @@
     {% endfor %}
   </table>
   <script>
+    const $ = (query) => document.querySelector(query);
+    const custom = $('#custom');
+    const code = $('.code');
+    const cross = $('#cross');
+    const alertbox = $('.alert');
     const update = () => {
-      const custom = document.getElementById('custom');
-      const code = document.querySelector('.code');
       custom.addEventListener('change', () => {
 	code.style.display = custom.checked ? 'block' : 'none';
       });
@@ -181,6 +198,9 @@
     function copyLink(id) {
       navigator.clipboard.writeText(`${window.location.origin}/r/${id}`);
       alert("Copied");
+    }
+    function hideAlert() {
+      alertbox.style.display = 'none';
     }
   </script>
 </body>
