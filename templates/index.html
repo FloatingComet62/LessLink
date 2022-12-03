@@ -1,112 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Ubuntu&display=swap" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Ubuntu&display=swap');
-        body {
-            background-color: #303030;
-            font-family: 'Ubuntu', sans-serif;
-        }
-        main {
-            margin-top: 1rem;
-            color: #fff;
-        }
-        .alert{
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        .success {
-            background-color: #87ed68;
-            color: #000;
-        }
-        .danger {
-            background-color: #ff5c5c;
-        }
-        a, a:visited {
-            color: #fff;
-            text-decoration: none;
-        }
-        table {
-            width: 100%;
-            border: 1px solid #fff;
-            border-collapse: collapse;
-        }
-        th, td{
-            border: 1px solid #fff;
-            padding: 0.5rem;
-        }
-        button > a{
-            color: #000;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Ubuntu&display=swap" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Ubuntu&display=swap');
+    body {
+      background-color: #303030;
+      font-family: 'Ubuntu', sans-serif;
+      color: white;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    #section {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #202020;
+      padding: 1rem;
+    }
+    #section > * {
+      display: flex;
+      gap: 1rem;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      width: 50%;
+    }
+    form > * {
+      display: flex;
+      gap: 2rem;
+    }
+    form > * > * {
+      display: flex;
+      gap: 1.5rem;
+    }
+    input {
+      border: none;
+      background-color: white !important;
+      text-align: center;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+    input:focus {
+      outline: none;
+    }
+    button {
+      border: none;
+      cursor: pointer;
+    }
+    button[type="submit"] {
+      justify-content: center;
+      width: 10rem;
+      background-color: #a5ff70;
+      padding: 1rem;
+    }
+    a {
+      text-decoration: none;
+      color: white;
+    }
+
+    .links {
+      background-color: #252525;
+      padding: 1rem;
+
+      display: grid;
+      grid-template-columns: auto auto auto auto auto;
+    }
+    .cell {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      margin: 0.5rem;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      flex-direction: column;
+      background-color: #151515;
+    }
+    .btn {
+      width: 4rem;
+    }
+    .head {
+      font-size: 1.3rem;
+      font-weight: bolder;
+    }
+
+    .alert {
+      background-color: #000;
+      width: 100%;
+      text-align: center;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      border-radius: 1rem;
+    }
+    .danger {
+      background-color: #eb4034;
+    }
+    .success {
+      background-color: #2fcc41;
+    }
+  </style>
 </head>
 <body>
-    <main>
-        {% if alert %}
-        <div class="alert {{alert.type}}">
-            {{alert.text}}
+  {% if alert %}
+  <div class="alert {{alert.type}}">
+    {{alert.text}}
+  </div>
+  {% endif %}
+  <h1>Dashboard</h1>
+  <form action="/add-link" method="post">
+    <div>
+      <div id="section">
+	<label for="link">Add Link</label>
+        <input name="link" id="link" placeholder="link">
+      </div>
+      <div id="section">
+	<div>
+	  <label for="custom">Custom Link</label>
+	  <input type="checkbox" name="custom" id="custom" onclick="update()">
         </div>
-        {% endif %}
-        <h1>Dashboard</h1>
-        <form action="/add-link" method="post">
-            <label for="link">Add Link</label>
-            <input name="link" id="link">
-            <label for="custom">Custom Link</label>
-            <input type="checkbox" name="custom" id="custom" onclick="dothing()">
-            <div class="code" style="display: none;">
-                <label for="code">Custom Code</label>
-                <input name="code" id="code">
-            </div>
-            <button type="submit">Submit</button>
-        </form>
-        <div class="links">
-            <h1>Links</h1>
-            <table>
-                <tr>
-                    <th>Link</th>
-                    <th>Code</th>
-                    <th>Clicks</th>
-                    <th>Created on</th>
-                    <th>Actions</th>
-                </tr>
-                {% for link in links %}
-                    <tr>
-                        <td><a href="{{link.link}}" target="_blank">{{link.link}}</a></td>
-                        <td><a href="/r/{{link._id}}" target="_blank">{{link._id}}</a></td>
-                        <td>{{link.clicks}}</td>
-                        <td>{{link.date}}</td>
-                        <td>
-                            <button><a href="/action/delete/{{link._id}}">Delete</a></button>
-                            <button onclick='editLink("{{link._id}}")'>Edit</button>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
-    </main>
-    <script>
-        function dothing(){
-            const custom = document.getElementById('custom');
-            const code = document.querySelector('.code');
-            custom.addEventListener('change', () => {
-                if (custom.checked) {
-                    code.style.display = 'block';
-                } else {
-                    code.style.display = 'none';
-                }
-            });
-        }
-        document.onload = dothing();
-        function editLink(id){
-            let new_link = prompt('Enter new redirect link');
-            if (new_link) {
-                window.location.href = `/action/edit/${id}?link=${new_link}`;
-            }
-        }
-    </script>
+	<div class="code" style="display: none">
+	  <div>
+	    <label for="code">Code: </label>
+	    <input name="code" id="code" placeholder="Code">
+	  </div>
+	</div>
+      </div>
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+  <h1>Links</h1>
+  <div class="links">
+    <div class="head cell">Link</div>
+    <div class="head cell">Code</div>
+    <div class="head cell">Clicks</div>
+    <div class="head cell">Created on</div>
+    <div class="head cell">Actions</div>
+    {% for link in links %}
+    <div class="item cell"><a href="{{link.link}}" target="_blank">{{link.link}}</a></div>
+    <div class="item cell"><a href="/r/{{link._id}}" target="_blank">{{link._id}}</a></div>
+    <div class="item cell">{{link.clicks}}</div>
+    <div class="item cell">{{link.date}}</div>
+    <div class="item cell">
+      <a href="/action/delete/{{link._id}}"><button class="btn">Delete</button></a>
+      <button onclick='editLink("{{link._id}}")' class="btn">Edit</button>
+      <button onclick='copyLink("{{link._id}}")'>Copy Link</button>
+    </div>
+    {% endfor %}
+  </table>
+  <script>
+    const update = () => {
+      const custom = document.getElementById('custom');
+      const code = document.querySelector('.code');
+      custom.addEventListener('change', () => {
+	code.style.display = custom.checked ? 'block' : 'none';
+      });
+    }
+    document.onload = update;
+    function editLink(id) {
+      const new_link = prompt('Enter new redirect link');
+      if (new_link) {
+        window.location.href = `/action/edit/${id}?link=${new_link}`;
+      }
+    }
+    function copyLink(id) {
+      navigator.clipboard.writeText(`${window.location.origin}/r/${id}`);
+      alert("Copied");
+    }
+  </script>
 </body>
 </html>
